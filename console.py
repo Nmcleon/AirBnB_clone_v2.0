@@ -114,47 +114,44 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """ Create an object of any class"""
+        """ Create an paramect of any class"""
         try:
             if not args:
                 raise SyntaxError("** class name missing **")
-            split_list = args.split(' ')
-            class_name = split_list[0]
-            if class_name not in self.classes:
-                raise NameError("** class doesn't exist **")
+            split_list = args.split(" ")
+
+            kwargs = {}
+            for i in range(1, len(split_list)):
+                key, value = tuple(split_list[i].split("="))
+                if value[0] == '"':
+                    value = value.strip('"').replace("_", " ")
+                else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                    kwargs[key]=value
+
+                if kwargs == {}:
+                    param = eval(split_list[0])()
+                else:
+                    param = eval(split_list[0])(**kwargs)
+                    storage.new(param)
+                print(param.id)
+                obj.save()
+
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **")
             
-            params = {}
-            for param in split_list[1:]:
-                key, value = param.split('=')
-                # Process the value based on specified types
-                if value.startswith('"') and value.endswith('"'):
-                    # Remove quotes and replace underscores with spaces
-                    value = value[1:-1].replace('_', ' ').replace('\\"', '"')
-                    # Check for different types and convert accordingly
-                    if '.' in value:  # Float
-                        value = float(value)
-                    elif value.isdigit():  # Integer
-                        value = int(value)
-
-            params[key] = value
-            # Create an instance of the specified class with the given parameters
-            new_instance = self.classes[class_name](**params)
-            new_instance.save()
-            print(new_instance.id)
-        except SyntaxError as e:
-            print(e)
-        except NameError as e:
-            print(e)
-        except Exception as e:
-            print("Error creating instance:", e)
-
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
         print("[Usage]: create <className>\n")
 
     def do_show(self, args):
-        """ Method to show an individual object """
+        """ Method to show an individual paramect """
         new = args.partition(" ")
         c_name = new[0]
         c_id = new[2]
@@ -177,17 +174,17 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            print(storage._FileStorage__objects[key])
+            print(storage._FileStorage__paramects[key])
         except KeyError:
             print("** no instance found **")
 
     def help_show(self):
         """ Help information for the show command """
         print("Shows an individual instance of a class")
-        print("[Usage]: show <className> <objectId>\n")
+        print("[Usage]: show <className> <paramectId>\n")
 
     def do_destroy(self, args):
-        """ Destroys a specified object """
+        """ Destroys a specified paramect """
         new = args.partition(" ")
         c_name = new[0]
         c_id = new[2]
@@ -217,10 +214,10 @@ class HBNBCommand(cmd.Cmd):
     def help_destroy(self):
         """ Help information for the destroy command """
         print("Destroys an individual instance of a class")
-        print("[Usage]: destroy <className> <objectId>\n")
+        print("[Usage]: destroy <className> <paramectId>\n")
 
     def do_all(self, args):
-        """ Shows all objects, or all objects of a class"""
+        """ Shows all paramects, or all paramects of a class"""
         print_list = []
 
         if args:
@@ -228,24 +225,24 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage._FileStorage__paramects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage._FileStorage__paramects.items():
                 print_list.append(str(v))
 
         print(print_list)
 
     def help_all(self):
         """ Help information for the all command """
-        print("Shows all objects, or all of a class")
+        print("Shows all paramects, or all of a class")
         print("[Usage]: all <className>\n")
 
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k, v in storage._FileStorage__paramects.items():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
@@ -255,7 +252,7 @@ class HBNBCommand(cmd.Cmd):
         print("Usage: count <class_name>")
 
     def do_update(self, args):
-        """ Updates a certain object with new info """
+        """ Updates a certain paramect with new info """
         c_name = c_id = att_name = att_val = kwargs = ''
 
         # isolate cls from id/args, ex: (<cls>, delim, <id/args>)
@@ -314,7 +311,7 @@ class HBNBCommand(cmd.Cmd):
 
             args = [att_name, att_val]
 
-        # retrieve dictionary of current objects
+        # retrieve dictionary of current paramects
         new_dict = storage.all()[key]
 
         # iterate through attr names and values
@@ -339,7 +336,7 @@ class HBNBCommand(cmd.Cmd):
 
     def help_update(self):
         """ Help information for the update class """
-        print("Updates an object with new information")
+        print("Updates an paramect with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
 
 if __name__ == "__main__":
