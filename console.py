@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
                     # Check for different types and convert accordingly
                     if '.' in value:  # Float
                         value = float(value)
-                        elif value.isdigit():  # Integer
+                    elif value.isdigit():  # Integer
                         value = int(value)
 
             params[key] = value
