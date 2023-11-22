@@ -10,6 +10,7 @@ class User(BaseModel, Base):
     password = ''
     first_name = ''
     last_name = ''
+    reviews = ''
     """
     __tablename__ = 'users'
 
@@ -17,4 +18,4 @@ class User(BaseModel, Base):
     password = Column(String(128), nullable=False)
     first_name = Column(String(128), nullable=False)
     last_name = Column(String(128), nullable=False)
-    place = relationship('Place', cascade='all, delete', backref='user')
+    reviews = relationship('Review', cascade='all, delete', backref='user')
