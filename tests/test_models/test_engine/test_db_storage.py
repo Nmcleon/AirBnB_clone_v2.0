@@ -113,5 +113,6 @@ class TestDBStorage(unittest.TestCase):
         models.storage.save()
         self.assertIn("State.{}".format(state.id), models.storage.all())
 
+
 if __name__ == "__main__":
     unittest.main()
