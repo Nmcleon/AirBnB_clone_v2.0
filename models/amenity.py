@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import Table
+from amenity_place import place_amenity
 
 place_amenity = Table(
     'place_amenity',
