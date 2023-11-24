@@ -3,6 +3,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Table, ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy import Table
 
 place_amenity = Table(
     'place_amenity',
@@ -10,7 +11,7 @@ place_amenity = Table(
     Column(
         'place_id',
         String(60),
-        ForeignKey('place.id'),
+        ForeignKey('places.id'),
         primary_key=True,
         nullable=False),
     Column(
