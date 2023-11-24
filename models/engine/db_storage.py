@@ -40,11 +40,10 @@ class DBStorage:
             objs.extend(self.__session.query(Review).all())
             objs.extend(self.__session.query(Amenity).all())
         else:
-            if type(cls) == str:
+            if isinstance(cls, str):
                 cls = eval(cls)
             objs = self.__session.query(cls)
         return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
-
 
     def new(self, obj):
         """Add new obj to a DB"""
@@ -56,7 +55,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         """Delete/remove obj from DB"""
-        if obj != None:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
@@ -64,9 +63,9 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
-        Session=scoped_session(session_factory)
-        self.__session=Session()
-        
-	def close(self):
+        Session = scoped_session(session_factory)
+        self.__session = Session()
+
+    def close(self):
         """Close SQLAchemy session"""
         self.__session.close()
