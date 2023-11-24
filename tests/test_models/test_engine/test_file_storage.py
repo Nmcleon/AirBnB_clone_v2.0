@@ -4,6 +4,15 @@ import unittest
 from models.base_model import BaseModel
 from models import storage
 import os
+import sys
+import inspect
+import io
+import pep8
+from datetime import datetime
+from contextlib import redirect_stdout
+from models.engine.file_storage import FileStorage
+from models.user import User
+
 
 
 class test_fileStorage(unittest.TestCase):
@@ -88,7 +97,12 @@ class test_fileStorage(unittest.TestCase):
 
     def test_type_path(self):
         """ Confirm __file_path is string """
-        self.assertEqual(type(storage._FileStorage__file_path), str)
+        # self.assertEqual(type(storage._FileStorage__file_path), str)
+self.assertEqual(type(storage._FileStorage__file_path), str)
+
+    def test_type_objects(self):
+        """ Confirm __objects is a dict """
+        self.assertEqual(type(storage.all()), dict)
 
     def test_type_objects(self):
         """ Confirm __objects is a dict """
