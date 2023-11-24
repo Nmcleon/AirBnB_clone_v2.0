@@ -17,6 +17,7 @@ from models.place import Place
 from models.review import Review
 from models.engine.file_storage import FileStorage
 
+
 class TestConsole(unittest.TestCase):
     # Other test cases to be added...
 
@@ -25,7 +26,7 @@ class TestConsole(unittest.TestCase):
             style = pep8.StyleGuide(quiet=True)
             p = style.check_files(["console.py"])
             self.assertEqual(p.total_errors, 0, 'fix Pep8')
-            
+
 	def test_docstrings_in_console(self):
           """checki docstring"""
           self.assertIsNotNone(console.__doc__)
@@ -39,7 +40,7 @@ class TestConsole(unittest.TestCase):
           self.assertIsNotNone(HBNBCommand.do_update.__doc__)
           self.assertIsNotNone(HBNBCommand.do_count.__doc__)
           self.assertIsNotNone(HBNBCommand.default.__doc__)
-	
+
 
     def test_create(self):
         """Test create command"""
