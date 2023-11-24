@@ -24,7 +24,7 @@ class TestConsole(unittest.TestCase):
         style = pep8.StyleGuide(quiet=True)
         p = style.check_files(["console.py"])
         self.assertEqual(p.total_errors, 0, 'fix Pep8')
-        
+
     def test_docstrings_in_console(self):
         """checki docstring"""
         self.assertIsNotNone(console.__doc__)
