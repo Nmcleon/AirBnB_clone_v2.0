@@ -3,7 +3,7 @@
 Fabric script to create and distribute an archive to web servers
 """
 
-from fabric.api import local, run, env
+from fabric.api import local, run, env, put
 from datetime import datetime
 from os.path import exists
 
