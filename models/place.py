@@ -4,7 +4,8 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Table, Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import Table
-from amenity_place import place_amenity 
+from models.amenity import place_amenity as amenity_place 
+from models.shared import place_amenity
 
 place_amenity = Table(
     'place_amenity',

@@ -1,10 +1,15 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Table, ForeignKey
-from sqlalchemy.orm import relationship
-from sqlalchemy import Table
-from amenity_place import place_amenity
+from sqlalchemy import Column, String, Table, ForeignKey, relationship
+from models.amenity_place import place_amenity
+
+class Amenity(BaseModel, Base):
+    __tablename__ = 'amenities'
+    name = Columnn(String(128), nullable=False)
+
+""" Define the association table for the many-to-many
+relationship between Place and Amenity"""
 
 place_amenity = Table(
     'place_amenity',
@@ -21,6 +26,9 @@ place_amenity = Table(
         ForeignKey('amenities.id'),
         primary_key=True,
         nullable=False))
+
+place_amenity_rel = relationship('Place', secondary=place_amenity,
+             viewonly=False)
 
 
 class Amenity(BaseModel, Base):
