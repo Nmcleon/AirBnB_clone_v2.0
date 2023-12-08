@@ -8,8 +8,6 @@ from datetime import datetime
 from os.path import exists
 
 env.hosts = ['54.157.179.122', '100.26.234.54']  # server IP addresses
-env.user = 'ubuntu'  # username
-env.key_filename = '/~/.ssh/school'  # SSH private key path
 
 
 def do_pack():
