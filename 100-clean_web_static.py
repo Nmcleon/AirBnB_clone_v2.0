@@ -5,26 +5,22 @@ Fabric script to delete out-of-date archives
 import os
 from fabric.api import *
 
-env.hosts = ['52.87.155.66', '54.89.109.87']
+env.hosts = ['54.157.179.122', '100.26.234.54']  # server IP addresses
 
 
 def do_clean(number=0):
-    """Delete out-of-date archives.
-    Args:
-        number (int): The number of archives to keep.
-    If number is 0 or 1, keeps only the most recent archive. If
-    number is 2, keeps the most and second-most recent archives,
-    etc.
+    """
+    Deletes out-of-date archives
     """
     number = 1 if int(number) == 0 else int(number)
 
-    archives = sorted(os.listdir("versions"))
-    [archives.pop() for i in range(number)]
+    local_archives = sorted(os.listdir("versions"))
+    [local_archives.pop() for i in range(number)]
     with lcd("versions"):
-        [local("rm ./{}".format(a)) for a in archives]
+        [local("rm ./{}".format(a)) for a in local_archives]
 
     with cd("/data/web_static/releases"):
-        archives = run("ls -tr").split()
-        archives = [a for a in archives if "web_static_" in a]
-        [archives.pop() for i in range(number)]
-        [run("rm -rf ./{}".format(a)) for a in archives]
+        local_archives = run("ls -tr").split()
+        local_archives = [a for a in local_archives if "web_static_" in a]
+        [local_archives.pop() for i in range(number)]
+        [run("rm -rf ./{}".format(a)) for a in local_archives]
