@@ -68,4 +68,4 @@ class DBStorage:
 
     def close(self):
         """Close SQLAchemy session"""
-        self.__session.close()
+        DBStorage.__session.close()
