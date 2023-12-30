@@ -32,16 +32,25 @@ class DBStorage:
 
     def all(self, cls=None):
         """implementation for query to return a dictionary of objects"""
-        class_mapping = {
-                "State": State,
-                "City": City,
-                "User": User,
-                "Place": Place,
-                "Review": Review,
-                "Amenity": Amenity
-                }
+        class_mapping = {}
 
-        if cls is None:
+        if cls:
+            if type(cls) is str:
+                cls = eval(cls)
+            query = self.__session.query(cls)
+            for elem in query:
+                key = "{}.{}".format(type(elem).__name__, elem.id)
+                class_mapping[key] = elem
+        else:
+            lista = [State, City, User, Place, Review, Amenity]
+            for clase in lista:
+                query = self.__session.query(clase)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    class_mapping[key] = elem
+        return (class_mapping)
+                    
+                    
             objs = []
             for model_class in class_mapping.values():
                 objs.extend(self.__session.query(model_class).all())
