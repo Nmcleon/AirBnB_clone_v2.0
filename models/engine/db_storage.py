@@ -1,6 +1,6 @@
 #!/usr/bin/Python3
 """Module that defines the engine for the MySQL database"""
-from sqlalchemy import create_engine
+from sqlalchemy import (create_engine)
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 import os
@@ -12,8 +12,6 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-
-Base = declarative_base()
 
 
 class DBStorage:
@@ -27,25 +25,30 @@ class DBStorage:
                                       format(os.getenv('HBNB_MYSQL_USER'),
                                              os.getenv('HBNB_MYSQL_PWD'),
                                              os.getenv('HBNB_MYSQL_HOST'),
-                                             os.getenv('HBNB_MYSQL_DB')),
+                                             os.getenv('HBNB_MYSQL_DB'),
+                                             env = getenv("HBNB_ENV")),
                                       pool_pre_ping=True)
+        if env == "test":
+            Base.metadata.drop_all(self._engine)
 
     def all(self, cls=None):
         """implementation for query to return a dictionary of objects"""
-        if cls is None:
-            objs = (
-                    self.__session.query(State).all()
-                    + self.__session.query(City).all()
-                    + self.__session.query(User).all()
-                    + self.__session.query(Place).all()
-                    + self.__session.query(Review).all()
-                    + self.__session.query(Amenity).all()
-                    )
+       dic = {}
+        if cls:
+            if type(cls) is str:
+                cls = eval(cls)
+            query = self.__session.query(cls)
+            for elem in query:
+                key = "{}.{}".format(type(elem).__name__, elem.id)
+                dic[key] = elem
         else:
-            if isinstance(cls, str):
-                raise ValueError("Invalid class name provided")
-            objs = self.__session.query(cls).all() if cls else []
-        return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
+            lista = [State, City, User, Place, Review, Amenity]
+            for clase in lista:
+                query = self.__session.query(clase)
+                for elem in query:
+                    key = "{}.{}".format(type(elem).__name__, elem.id)
+                    dic[key] = elem
+        return (dic)
 
     def new(self, obj):
         """Add new obj to a DB"""
