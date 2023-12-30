@@ -3,6 +3,7 @@
 from models.base_model import BaseModel
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
+from models import storage
 from models.city import City
 import os
 
@@ -23,7 +24,8 @@ class State(BaseModel):
             """public getter method cities to
             return the list of City"""
             my_list = []
-            for city in models.storage.all(City).values():
+            all_cities = storage.all(City)
+            for city in all_cities.values():
                 if city.state_id == self.id:
-                    city_list.append(city)
-            return my_list       
+                    my_list.append(city)
+            return my_list
