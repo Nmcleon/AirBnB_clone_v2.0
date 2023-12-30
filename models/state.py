@@ -14,17 +14,16 @@ class State(BaseModel):
 
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
-    cities = relationship('City', cascade='all, delete', backref='state')
-
-    @property
-    def cities(self):
-        """public getter method cities to
-                return the list of City"""
-        from models import storage
-        my_list = []
-        extracted_cities = storage.all(City).values()
-        for city in extracted_cities:
-            if self.id == city.state_id:
-                my_list.append(city)
-        return my_list
-        
+    
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        cities = relationship('City', cascade='all, delete', backref='state')
+    else:
+        @property
+        def cities(self):
+            """public getter method cities to
+            return the list of City"""
+            my_list = []
+            for city in models.storage.all(City).values():
+                if city.state_id == self.id:
+                    city_list.append(city)
+            return my_list       

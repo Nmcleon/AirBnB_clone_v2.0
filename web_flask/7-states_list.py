@@ -6,6 +6,7 @@ List of states
 from models import storage
 from flask import Flask
 from model.state import State
+from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import render_template
 app = Flask(__name__)
 
@@ -19,6 +20,7 @@ def appcontext_teardown(self):
 @app.route('/states_list', strict_slashes=False)
 def state_info():
     """display a HTML page inside the tag BODY"""
+    states = sorted(storage.all(State).values(), key=lambda s: s.name)
     return render_template('7-states_list.html', states=storage.all(State))
 
 
