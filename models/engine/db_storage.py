@@ -32,17 +32,25 @@ class DBStorage:
 
     def all(self, cls=None):
         """implementation for query to return a dictionary of objects"""
+        class_mapping = {
+                "State": State,
+                "City": City,
+                "User": User,
+                "Place": Place,
+                "Review": Review,
+                "Amenity": Amenity
+                }
+
         if cls is None:
-            objs = self.__session.query(State).all()
-            objs.extend(self.__session.query(City).all())
-            objs.extend(self.__session.query(User).all())
-            objs.extend(self.__session.query(Place).all())
-            objs.extend(self.__session.query(Review).all())
-            objs.extend(self.__session.query(Amenity).all())
+            objs = []
+            for model_class in class_mapping.values():
+                objs.extend(self.__session.query(model_class).all())
         else:
-            if isinstance(cls, str):
-                cls = eval(cls)
-            objs = self.__session.query(cls)
+            if cls in class_mapping:
+                objs = self.__session.query(class_mapping[cls]).all()
+            else:
+                raise ValueError("Invalid class name provided")
+
         return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
 
     def new(self, obj):
