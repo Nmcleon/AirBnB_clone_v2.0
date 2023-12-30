@@ -31,6 +31,7 @@ class DBStorage:
                                       pool_pre_ping=True)
         if env == "test":
             Base.metadata.drop_all(self._engine)
+        self.reload()
 
     def all(self, cls=None):
         """implementation for query to return a dictionary of objects"""
