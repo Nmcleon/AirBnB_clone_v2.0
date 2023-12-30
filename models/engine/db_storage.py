@@ -3,7 +3,8 @@
 from sqlalchemy import (create_engine)
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-import os
+import os 
+from os import getenv
 from models.base_model import Base
 from models.base_model import BaseModel
 from models.amenity import Amenity
@@ -21,19 +22,19 @@ class DBStorage:
 
     def __init__(self):
         """Initialize DBStorage instance"""
+        env = getenv("HBNB_ENV")
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                       format(os.getenv('HBNB_MYSQL_USER'),
                                              os.getenv('HBNB_MYSQL_PWD'),
                                              os.getenv('HBNB_MYSQL_HOST'),
-                                             os.getenv('HBNB_MYSQL_DB'),
-                                             env = getenv("HBNB_ENV")),
+                                             os.getenv('HBNB_MYSQL_DB')),
                                       pool_pre_ping=True)
         if env == "test":
             Base.metadata.drop_all(self._engine)
 
     def all(self, cls=None):
         """implementation for query to return a dictionary of objects"""
-       dic = {}
+        dic = {}
         if cls:
             if type(cls) is str:
                 cls = eval(cls)
