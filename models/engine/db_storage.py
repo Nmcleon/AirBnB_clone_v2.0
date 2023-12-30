@@ -35,32 +35,20 @@ class DBStorage:
         class_mapping = {}
 
         if cls:
-            if type(cls) is str:
+            if isinstance(cls, str):
                 cls = eval(cls)
-            query = self.__session.query(cls)
+            query = self.__session.query(cls).all()
             for elem in query:
                 key = "{}.{}".format(type(elem).__name__, elem.id)
                 class_mapping[key] = elem
         else:
-            lista = [State, City, User, Place, Review, Amenity]
-            for clase in lista:
-                query = self.__session.query(clase)
+            classes = [State, City, User, Place, Review, Amenity]
+            for class_ in classes:
+                query = self.__session.query(class_).all()
                 for elem in query:
                     key = "{}.{}".format(type(elem).__name__, elem.id)
                     class_mapping[key] = elem
-        return (class_mapping)
-                    
-                    
-            objs = []
-            for model_class in class_mapping.values():
-                objs.extend(self.__session.query(model_class).all())
-        else:
-            if cls in class_mapping:
-                objs = self.__session.query(class_mapping[cls]).all()
-            else:
-                raise ValueError("Invalid class name provided")
-
-        return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
+        return class_mapping
 
     def new(self, obj):
         """Add new obj to a DB"""
